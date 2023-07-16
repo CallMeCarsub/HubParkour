@@ -1,2 +1,6 @@
 /javadoc/
 /target/
+hubparkour-api/target
+.idea
+plugin/target
+plugin/dependency-reduced-pom.xml

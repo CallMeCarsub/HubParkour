@@ -52,19 +52,7 @@ public class FallListener implements Listener {
                 }
 
                 e.setCancelled(true);
-                p.setFallDistance(0);
-                HubParkourPlayer player = CacheManager.getPlayer(p);
-
-                Location l = player.getParkour().getRestartPoint().getLocation().clone();
-                if (player.getLastReached() != 0) {
-                    l = player.getParkour().getCheckpoint(player.getLastReached()).getLocation().clone();
-                }
-                l.setX(l.getX() + 0.5);
-                l.setY(l.getY() + 0.5);
-                l.setZ(l.getZ() + 0.5);
-                p.setVelocity(new Vector(0, 0, 0));
-                p.teleport(l);
-                ConfigUtil.sendMessage(p, "Messages.Parkour.Teleport", "You have been teleported to your last checkpoint.", true, Collections.emptyMap());
+                this.teleportToCheckpoint(p);
                 if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
                     hasTeleported.add(p);
                     new BukkitRunnable(){
@@ -76,6 +64,22 @@ public class FallListener implements Listener {
                 }
             }
         }
+    }
+
+    public static void teleportToCheckpoint(Player p){
+        p.setFallDistance(0);
+        HubParkourPlayer player = CacheManager.getPlayer(p);
+
+        Location l = player.getParkour().getRestartPoint().getLocation().clone();
+        if (player.getLastReached() != 0) {
+            l = player.getParkour().getCheckpoint(player.getLastReached()).getLocation().clone();
+        }
+        l.setX(l.getX() + 0.5);
+        l.setY(l.getY() + 0.5);
+        l.setZ(l.getZ() + 0.5);
+        p.setVelocity(new Vector(0, 0, 0));
+        p.teleport(l);
+        ConfigUtil.sendMessage(p, "Messages.Parkour.Teleport", "You have been teleported to your last checkpoint.", true, Collections.emptyMap());
     }
 
     public static List<Player> getHasTeleported() {

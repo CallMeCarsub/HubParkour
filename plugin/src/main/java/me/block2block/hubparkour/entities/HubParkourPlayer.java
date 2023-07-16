@@ -9,6 +9,7 @@ import me.block2block.hubparkour.api.events.player.ParkourPlayerFailEvent;
 import me.block2block.hubparkour.api.events.player.ParkourPlayerFinishEvent;
 import me.block2block.hubparkour.api.items.*;
 import me.block2block.hubparkour.api.plates.Checkpoint;
+import me.block2block.hubparkour.listeners.FallListener;
 import me.block2block.hubparkour.managers.CacheManager;
 import me.block2block.hubparkour.utils.ConfigUtil;
 import me.block2block.hubparkour.utils.TitleUtil;
@@ -575,6 +576,14 @@ public class HubParkourPlayer implements IHubParkourPlayer {
                         message = PlaceholderAPI.setPlaceholders(player, message);
                     }
                     TitleUtil.sendActionBar(player, message, ChatColor.WHITE, false);
+                    if(!player.isOnGround() && player.getFallDistance() > 15){
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                FallListener.teleportToCheckpoint(player);
+                            }
+                        }.runTask(HubParkour.getInstance());
+                    }
                 }
             }.runTaskTimerAsynchronously(HubParkour.getInstance(), 0, ConfigUtil.getInt("Settings.Action-Bar.Update-Interval", 2));
         }
